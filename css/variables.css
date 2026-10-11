@@ -1,0 +1,6 @@
+:root {
+  /* สี */
+  --gradient-purple : #ff3bea7a,#9004a17a, #7a5fff;
+  --gradient-ocean:  #00c6ff, #0072ff, #3a47d5;
+  --gt-shadow: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.35));
+}
