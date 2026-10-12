@@ -34,7 +34,7 @@
         <!-- Model Display -->
         <div class="model-display">
             <h1 class="gradient-text">แปลงสกินเป็นแอดออน</h1>
-            <div class="model-display__border">
+            <div class="model-display__border is-steve">
                 <div class="model-display__inner">
                     <model-viewer
                         class="model-display__viewer"
@@ -51,9 +51,25 @@
                     </model-viewer>
                 </div>
             </div>
+            <div class="model-toggle" id="model-toggle" data-value="Steve">
+                <button
+                    type="button"
+                    class="model-toggle__btn is-steve is-active"
+                    data-model="Steve"
+                >
+                    Steve (ชาย)
+                </button>
+                <button
+                    type="button"
+                    class="model-toggle__btn is-alex"
+                    data-model="Alex"
+                >
+                    Alex (หญิง)
+                </button>
+            </div>
             <!-- Controls Button -->
             <div class="controls-panel">
-                <!-- ใส่สกิน (label ผูกกับ input file ได้ตามปกติ) -->
+                <!-- ใส่สกิน  -->
                 <div class="input-skin_container">
                     <label for="upload-skin" class="btn upload-skin__btn"
                         >เลือกสกิน 📥</label
@@ -65,7 +81,7 @@
                         hidden
                     />
                 </div>
-                <!-- ต่อไป (ปุ่มจริง ไม่ใช้ label + hidden button) -->
+                <!-- ต่อไป -->
                 <div class="continue_container">
                     <button
                         type="button"
@@ -149,42 +165,27 @@
                     </div>
                 </div>
 
-                <!-- เลือกโมเดล -->
-                <div class="field">
-                    <span class="field__label">เลือกโมเดล</span>
-                    <div
-                        class="dropdown"
-                        data-placeholder="เลือกโมเดล..."
-                        data-name="model"
+                <!-- Icon Pack -->
+                <div class="input-iconpack_container">
+                    <label
+                        for="upload-iconpack"
+                        class="btn upload-iconpack__btn"
+                        >ใส่ปกแอดออน 📥</label
                     >
-                        <button
-                            type="button"
-                            class="dropdown__toggle"
-                            aria-expanded="false"
-                        >
-                            <span class="dropdown__text"></span>
-                            <span class="dropdown__arrow">▾</span>
-                        </button>
-                        <div class="dropdown__menu">
-                            <label class="dropdown__item">
-                                <input
-                                    type="checkbox"
-                                    value="Steve"
-                                    data-exclusive
-                                />
-                                Steve (ชาย)
-                            </label>
-                            <label class="dropdown__item">
-                                <input
-                                    type="checkbox"
-                                    value="Alex"
-                                    data-exclusive
-                                />
-                                Alex (หญิง)
-                            </label>
-                        </div>
-                    </div>
+                    <input
+                        type="file"
+                        id="upload-iconpack"
+                        accept="image/*"
+                        hidden
+                    />
+                    <img
+                        id="iconpack-preview"
+                        class="iconpack-preview"
+                        alt=""
+                    />
                 </div>
+                <!--  -->
+
                 <!-- ยืนยัน -->
                 <div class="confirm_container">
                     <button type="button" id="confirm" class="btn confirm__btn">
