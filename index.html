@@ -1,41 +1,206 @@
 <!doctype html>
 <html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!--font-->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Itim&display=swap"
-      rel="stylesheet"
-    />
-    <!--css-->
-    <link rel="stylesheet" href="styles/style.css" />
-    <link rel="stylesheet" href="styles/loading.css" />
-    <link rel="stylesheet" href="styles/chatbox.css" />
-    <title>Happy Birthday</title>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Convert Skin to Add-On</title>
+        <!-- Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Itim&display=swap"
+            rel="stylesheet"
+        />
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/variables.css" />
+        <link rel="stylesheet" href="css/btn.css" />
+        <link rel="stylesheet" href="css/reset.css" />
+        <link rel="stylesheet" href="css/fonts.css" />
+        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/dialog.css" />
+        <link rel="stylesheet" href="css/popup.css" />
+        <!-- File -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/file-saver/2.0.5/FileSaver.min.js"></script>
 
-  <body>
-    <div id="loader">
-      <p class="loader-text">ในวันที่พิเศษ</p>
-      <p class="loader-sub">แตะที่หน้าจอเพื่อเริ่ม...</p>
-    </div>
+        <!-- Model Viewer -->
+        <script
+            type="module"
+            src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
+        ></script>
+    </head>
 
-    <main>
-      <!--แชท-->
-      <div class="chat-container" id="chatContainer"></div>
+    <body>
+        <!-- Model Display -->
+        <div class="model-display">
+            <h1 class="gradient-text">แปลงสกินเป็นแอดออน</h1>
+            <div class="model-display__border is-steve">
+                <div class="model-display__inner">
+                    <model-viewer
+                        class="model-display__viewer"
+                        id="mainModel"
+                        src="models/display.model.glb"
+                        alt="กำลังโหลดโมเดล..."
+                        auto-rotate
+                        camera-controls
+                        camera-orbit="180deg 75deg 5m"
+                        min-camera-orbit="auto auto 5m"
+                        max-camera-orbit="auto auto 5m"
+                        interaction-prompt="auto"
+                    >
+                    </model-viewer>
+                </div>
+            </div>
+            <div class="model-toggle" id="model-toggle" data-value="Steve">
+                <button
+                    type="button"
+                    class="model-toggle__btn is-steve is-active"
+                    data-model="Steve"
+                >
+                    Steve (ชาย)
+                </button>
+                <button
+                    type="button"
+                    class="model-toggle__btn is-alex"
+                    data-model="Alex"
+                >
+                    Alex (หญิง)
+                </button>
+            </div>
+            <!-- Controls Button -->
+            <div class="controls-panel">
+                <!-- ใส่สกิน  -->
+                <div class="input-skin_container">
+                    <label for="upload-skin" class="btn upload-skin__btn"
+                        >เลือกสกิน 📥</label
+                    >
+                    <input
+                        type="file"
+                        id="upload-skin"
+                        accept="image/*"
+                        hidden
+                    />
+                </div>
+                <!-- ต่อไป -->
+                <div class="continue_container">
+                    <button
+                        type="button"
+                        id="continue"
+                        class="btn continue__btn"
+                    >
+                        ต่อไป
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- หน้าต่างตั้งค่า -->
+        <div class="settings-overlay" id="settings-overlay" hidden>
+            <div class="settings-modal" role="dialog" aria-modal="true">
+                <button
+                    type="button"
+                    class="settings-modal__close"
+                    id="settings-close"
+                    aria-label="ปิด"
+                >
+                    ❌️
+                </button>
+                <h1 class="gradient-text">ตั้งค่าเพิ่มเติม</h1>
+                <!-- Indentifier-->
+                <div class="field">
+                    <label class="field__label" for="identifier"
+                        >✒️ Identifier</label
+                    >
+                    <input
+                        type="text"
+                        class="textbar"
+                        id="identifier"
+                        placeholder="เช่น my:skinpack"
+                        autocomplete="off"
+                    />
+                </div>
+                <!-- Name Pack -->
+                <div class="field">
+                    <label class="field__label" for="namePack"
+                        >✏️ Name Pack</label
+                    >
+                    <input
+                        type="text"
+                        class="textbar namepack"
+                        id="namePack"
+                        placeholder="เช่น My Skin Pack"
+                        autocomplete="off"
+                    />
+                </div>
+                <!-- เลือกส่วน -->
+                <div class="field">
+                    <span class="field__label">เลือกส่วนที่ต้องการ</span>
+                    <div
+                        class="dropdown"
+                        data-placeholder="เลือก..."
+                        data-name="part"
+                    >
+                        <button
+                            type="button"
+                            class="dropdown__toggle"
+                            aria-expanded="false"
+                        >
+                            <span class="dropdown__text"></span>
+                            <span class="dropdown__arrow">▾</span>
+                        </button>
+                        <div class="dropdown__menu">
+                            <label class="dropdown__item">
+                                <input type="checkbox" value="หัว" /> หัว
+                            </label>
+                            <label class="dropdown__item">
+                                <input type="checkbox" value="ตัว" /> ตัว
+                            </label>
+                            <label class="dropdown__item">
+                                <input
+                                    type="checkbox"
+                                    value="หัว+ตัว (รวมชิ้น)"
+                                />
+                                หัว+ตัว (รวมชิ้น)
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
-      <!--ช่องส่งข้อความ-->
-      <div class="chatbox">
-        <div class="chat-input-fake" id="chatInput"></div>
-        <button id="sendBtn" disabled style="opacity: 0.5; cursor: not-allowed">
-          ส่ง
-        </button>
-      </div>
-    </main>
+                <!-- Icon Pack -->
+                <div class="input-iconpack_container">
+                    <label
+                        for="upload-iconpack"
+                        class="btn upload-iconpack__btn"
+                        >ใส่ปกแอดออน 📥</label
+                    >
+                    <input
+                        type="file"
+                        id="upload-iconpack"
+                        accept="image/*"
+                        hidden
+                    />
+                    <img
+                        id="iconpack-preview"
+                        class="iconpack-preview"
+                        alt=""
+                    />
+                </div>
+                <!--  -->
 
-    <script src="scripts/chat.js"></script>
-  </body>
+                <!-- ยืนยัน -->
+                <div class="confirm_container">
+                    <button type="button" id="confirm" class="btn confirm__btn">
+                        แปลงเลย!
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- PopUP -->
+        <div class="popup" id="popup" role="alert" aria-live="polite">
+            <span class="popup__text" id="popup-text"></span>
+        </div>
+        <script src="js/alert.js"></script>
+        <script src="js/index.js"></script>
+        <script src="js/btn.js"></script>
+        <script src="js/confirm.js"></script>
+    </body>
 </html>
