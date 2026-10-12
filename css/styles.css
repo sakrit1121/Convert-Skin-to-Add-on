@@ -235,3 +235,50 @@ body {
 .dropdown.is-alex .dropdown__item input {
   accent-color: #fd9ab3;
 }
+
+
+.model-display__border.is-steve {
+  background: linear-gradient(45deg, #5aa9f0, #a8d1e7);
+}
+
+.model-display__border.is-alex {
+  background: linear-gradient(45deg, #fd9ab3, #ffd1dc);
+}
+
+.model-toggle {
+  display: flex;
+  gap: 0.4rem;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.3rem;
+  border: 3px solid #d4d2f2;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.model-toggle__btn {
+  flex: 1;
+  padding: 0.6rem 0.5rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #4a5568;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.model-toggle__btn:active {
+  transform: scale(0.96);
+}
+
+.model-toggle__btn.is-steve.is-active {
+  background: #5aa9f0;
+  color: #fff;
+}
+
+.model-toggle__btn.is-alex.is-active {
+  background: #fd9ab3;
+  color: #fff;
+}

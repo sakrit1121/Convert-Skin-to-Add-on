@@ -19,7 +19,9 @@
 .settings-modal {
   position: relative;
   width: min(90%, 32rem);
-  height: min(85vh, 40rem);
+  height: auto;
+  max-height: 90vh;
+  overflow-y: auto;
   padding: 2rem 1.5rem 1.5rem;
   border-radius: 16px;
   background: #fff;
@@ -50,4 +52,54 @@
 .settings-modal__close:hover {
   background: #f1f1f1;
   color: #333;
+}
+
+.input-iconpack_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  top: auto;
+}
+
+.iconpack-preview {
+  display: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  flex-shrink: 0;
+  border: 3px solid #d9d0f5;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.iconpack-preview.is-visible {
+  display: block;
+}
+
+.confirm_container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  position: static;
+}
+
+.upload-iconpack__btn {
+  background: #f6f0ff;
+  color: #8e62e0;
+  border: 2px dashed #b98ae8;
+  padding: 0.7rem 1.2rem;
+  border-radius: 14px;
+  box-shadow: none;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.upload-iconpack__btn:hover {
+  background: #ede2ff;
+  border-color: #8e62e0;
+  transform: translateY(-2px);
+}
+
+.upload-iconpack__btn:active {
+  transform: scale(0.96);
 }
