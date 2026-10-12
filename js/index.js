@@ -22,17 +22,7 @@ input.addEventListener('change', async () => {
     return;
   }
 
-  const url = URL.createObjectURL(file);
-  const texture = await viewer.createTexture(url);
-
-  texture.sampler.setMinFilter(9728);
-  texture.sampler.setMagFilter(9728);
-
-  viewer.model.materials.forEach((material) => {
-    material.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
-  });
-
-  URL.revokeObjectURL(url);
+  await applySkin(file);
   skinLoaded = true;
   showPopup('โหลดสกินแล้ว ✅');
 });
@@ -147,18 +137,62 @@ function getDropdownValues(name) {
 
 
 
-// เปลี่ยนสีกรอบ
 const frame = document.querySelector('.model-display__border');
-const modelDropdown = document.querySelector('.dropdown[data-name="model"]');
+const modelToggle = document.getElementById('model-toggle');
+const modelBtns = modelToggle.querySelectorAll('.model-toggle__btn');
 
-function updateFrameColor() {
-  const [model] = getDropdownValues('model');
+const MODEL_SRC = {
+  Steve: 'models/display.model.glb',
+  Alex: 'models/alex.model.glb'
+};
 
-  [frame, modelDropdown].forEach((el) => {
-    el.classList.remove('is-steve', 'is-alex');
-    if (model === 'Steve') el.classList.add('is-steve');
-    if (model === 'Alex') el.classList.add('is-alex');
+async function applySkin(file) {
+  const url = URL.createObjectURL(file);
+  const texture = await viewer.createTexture(url);
+  texture.sampler.setMinFilter(9728);
+  texture.sampler.setMagFilter(9728);
+  viewer.model.materials.forEach((material) => {
+    material.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
   });
+  URL.revokeObjectURL(url);
 }
 
-modelDropdown.addEventListener('change', updateFrameColor);('change', updateFrameColor);
+function setModel(name) {
+  modelToggle.dataset.value = name;
+  modelBtns.forEach((b) => b.classList.toggle('is-active', b.dataset.model === name));
+  frame.classList.remove('is-steve', 'is-alex');
+  frame.classList.add(name === 'Alex' ? 'is-alex' : 'is-steve');
+  viewer.src = MODEL_SRC[name];
+}
+
+modelBtns.forEach((btn) => {
+  btn.addEventListener('click', () => setModel(btn.dataset.model));
+});
+
+viewer.addEventListener('error', () => {
+  if (modelToggle.dataset.value === 'Alex' && viewer.src.endsWith('alex.model.glb')) {
+    viewer.src = MODEL_SRC.Steve;
+    showPopup('ยังไม่มีไฟล์โมเดล Alex สำหรับพรีวิว', 'error');
+  }
+});
+
+viewer.addEventListener('load', async () => {
+  const file = input.files[0];
+  if (file && skinLoaded) await applySkin(file);
+});
+
+const iconInput = document.getElementById('upload-iconpack');
+const iconPreview = document.getElementById('iconpack-preview');
+
+iconInput.addEventListener('change', () => {
+  const file = iconInput.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    showPopup('กรุณาเลือกไฟล์รูปภาพ', 'error');
+    return;
+  }
+
+  iconPreview.src = URL.createObjectURL(file);
+  iconPreview.classList.add('is-visible');
+});

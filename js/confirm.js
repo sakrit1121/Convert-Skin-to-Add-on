@@ -21,7 +21,7 @@ function validateAllInputs() {
   const identifierValue = identifierInput.value.trim();
   const namePackValue = namePackInput.value.trim();
   const selectedParts = getDropdownValues('part');
-  const selectedModels = getDropdownValues('model');
+  const selectedModel = document.getElementById('model-toggle').dataset.value;
 
   const fail = (msg, el) => {
     showPopup(msg, 'error');
@@ -47,7 +47,6 @@ function validateAllInputs() {
 
   if (!namePackValue) return fail('กรอกชื่อแพ็กแอดออน', namePackInput);
   if (selectedParts.length === 0) return fail('เลือกส่วนที่ต้องการอย่างน้อย 1 ส่วน');
-  if (selectedModels.length === 0) return fail('เลือกโมเดล');
 
   const skinFile = document.getElementById('upload-skin')?.files[0];
   if (!skinFile) return fail('กรุณาเลือกสกินก่อน');
@@ -56,7 +55,7 @@ function validateAllInputs() {
     identifierVal: identifierValue,
     itemName: namePackValue,
     parts: mapParts(selectedParts),
-    model: selectedModels[0],
+    model: selectedModel,
     skinFile
   };
 }
@@ -70,11 +69,32 @@ function loadImage(file) {
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('อ่านไฟล์สกินไม่ได้')); };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('อ่านไฟล์รูปไม่ได้')); };
     img.src = url;
   });
 }
 
+
+async function toPackIcon(file, size = 256) {
+  const img = await loadImage(file);
+  const side = Math.min(img.width, img.height);
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  canvas.getContext('2d').drawImage(
+    img,
+    (img.width - side) / 2,
+    (img.height - side) / 2,
+    side,
+    side,
+    0,
+    0,
+    size,
+    size
+  );
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('สร้างปกแอดออนไม่สำเร็จ'))), 'image/png');
+  });
+}
 
 async function buildPartIcon(img, part, isAlex) {
   const k = img.width / 64;
@@ -255,9 +275,9 @@ async function convertToAddon({ identifierVal, itemName, parts, model, skinFile 
   zip.file(`RP/textures/entity/attachable/${rawItemName}.png`, imageArrayBuffer);
 
   // icon Pack
-  const iconPackFile = document.getElementById('upload-packIcon')?.files[0];
+  const iconPackFile = document.getElementById('upload-iconpack')?.files[0];
   if (iconPackFile) {
-    const iconArrayBuffer = await iconPackFile.arrayBuffer();
+    const iconArrayBuffer = await (await toPackIcon(iconPackFile, 256)).arrayBuffer();
     for (const folder of ['BP', 'RP']) {
       zip.file(`${folder}/pack_icon.png`, iconArrayBuffer);
     }
